@@ -1,12 +1,13 @@
-#ifndef HANDLER_H
-#define HANDLER_H
+#ifndef GAME_LOOP_H
+#define GAME_LOOP_H
 
 namespace hikari {
 
-class EngineHandler {
+class GameLoop {
 private:
 
 public:
+    void run();
     void processInput();
     void update();
     void render();
@@ -14,5 +15,4 @@ public:
 };
 
 }
-
-#endif HANDLER_H
+#endif GAME_LOOP_H
