@@ -3,17 +3,19 @@
 
 #include "game_loop.h"
 
-namespace hikari {
+namespace hikari
+{
 
-class Engine {
-private:
-    GameLoop* gameLoop;
+    class Engine
+    {
+    private:
+        GameLoop *gameLoop;
 
-public:
-    Engine();
-    ~Engine();
-    void runGame();
-};
+    public:
+        Engine();
+        ~Engine();
+        void runGame();
+    };
 
 }
 
