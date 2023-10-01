@@ -1,7 +1,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "game_loop.h"
+#include <hikari/renderer/renderer.h>
 
 namespace hikari
 {
@@ -9,7 +9,7 @@ namespace hikari
     class Engine
     {
     private:
-        GameLoop *gameLoop;
+        Renderer *renderer;
 
     public:
         Engine();

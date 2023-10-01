@@ -2,14 +2,19 @@
 
 using namespace hikari;
 
-Engine::Engine() {
-    gameLoop = new GameLoop;
+Engine::Engine()
+{
+    this->renderer = new Renderer;
 }
 
-Engine::~Engine() {
-    delete gameLoop;
+Engine::~Engine()
+{
+    delete renderer;
 }
 
-void Engine::runGame() {
-    this->gameLoop->run();
+void Engine::runGame()
+{
+    this->renderer->setup();
+    this->renderer->render();
+    this->renderer->clear();
 }
