@@ -1,6 +1,8 @@
 #include "renderer.h"
 #include <iostream>
 #include <cstring>
+#include "shader.h"
+
 using namespace hikari;
 
 Renderer::Renderer()
@@ -94,7 +96,6 @@ void Renderer::render()
 
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
