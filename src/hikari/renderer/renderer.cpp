@@ -82,7 +82,6 @@ void Renderer::setup()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    glViewport(0, 0, 800, 600);
     glfwSetFramebufferSizeCallback(window, &Renderer::framebuffer_size_callback);
 }
 
