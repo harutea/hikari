@@ -11,7 +11,6 @@ namespace hikari
         unsigned int ID;
 
     public:
-        Shader();
         Shader(const char *vertexShaderPath, const char *fragmentShaderPath);
         ~Shader();
         void use();
