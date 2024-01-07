@@ -8,10 +8,6 @@
 using namespace hikari;
 using namespace std;
 
-Shader::Shader()
-{
-}
-
 Shader::Shader(const char *vertexShaderPath, const char *fragmentShaderPath)
 {
     string vertexShaderSource;
