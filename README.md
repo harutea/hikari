@@ -1,5 +1,5 @@
 # hikari
-3D Game Engine using OpenGL
+3D Graphics Engine using OpenGL
 
 ## How to build
 ```bash
