@@ -20,7 +20,7 @@ void Renderer::setup()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    window = glfwCreateWindow(800, 600, "hikari by harutea", NULL, NULL);
+    window = glfwCreateWindow(800, 600, "hikari", NULL, NULL);
     if (window == NULL)
     {
         std::cout << " Failed to create GLFW window" << std::endl;
@@ -33,6 +33,15 @@ void Renderer::setup()
     // glfwSwapInterval(1);
 
     this->triangleShader = new Shader("../shaders/triangle.vert", "../shaders/triangle.frag");
+
+    float texCoords[] = {
+        0.0f,
+        0.0f,
+        1.0f,
+        0.0f,
+        0.5f,
+        1.0f,
+    };
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
