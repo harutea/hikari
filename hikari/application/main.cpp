@@ -2,12 +2,12 @@
 #include <hikari/renderer/renderer.h>
 #include <hikari/engine/engine.h>
 
-using namespace hikari;
-
 int main()
 {
-    Engine engine;
-    engine.runGame();
+    hikari::Engine engine;
+    
+    engine.init();
+    engine.run();
     
     return 0;
 }
