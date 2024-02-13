@@ -5,9 +5,9 @@
 int main()
 {
     hikari::Engine engine;
-    
+
     engine.init();
     engine.run();
-    
+
     return 0;
 }

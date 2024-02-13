@@ -12,7 +12,11 @@ Engine::~Engine()
     delete renderer;
 }
 
-void Engine::runGame()
+void Engine::init()
+{
+}
+
+void Engine::run()
 {
     this->renderer->setup();
     this->renderer->render();

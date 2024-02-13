@@ -14,7 +14,8 @@ namespace hikari
     public:
         Engine();
         ~Engine();
-        void runGame();
+        void init();
+        void run();
     };
 
 }
