@@ -17,6 +17,7 @@ Renderer::~Renderer()
 
 void Renderer::setup()
 {
+    /* Window */
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -36,6 +37,7 @@ void Renderer::setup()
 
     this->triangleShader = new Shader("../shaders/triangle.vert", "../shaders/triangle.frag");
 
+    /* Texture */
     float texCoords[] = {
         0.0f,
         0.0f,
@@ -50,6 +52,15 @@ void Renderer::setup()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("../resources/wall.jpg", &width, &height, &nrChannels, 0);
+
+    unsigned int texture;
+    glGenTextures(1, &texture);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    /* VAO, VBO */
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
