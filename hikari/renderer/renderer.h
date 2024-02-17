@@ -13,15 +13,11 @@ namespace hikari
         GLFWwindow *window;
         static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
         Shader *triangleShader;
+        unsigned int texture0;
+        unsigned int texture1;
         unsigned int VAO;
         unsigned int VBO;
         unsigned int EBO;
-        float vertices[18] = {
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
-        unsigned indices[3] = {
-            0, 1, 2};
         char *vertexShaderSource;
         char *fragmentShaderSource;
 

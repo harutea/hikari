@@ -1,4 +1,4 @@
-#include <hikari/physics/object.h>
+#include <hikari/object/object.h>
 #include <hikari/renderer/renderer.h>
 #include <hikari/engine/engine.h>
 
