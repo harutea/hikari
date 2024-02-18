@@ -13,12 +13,18 @@ namespace hikari
         Vector3 velocity;
         Vector3 force;
         double mass;
+        unsigned int texture0;
+        unsigned int texture1;
+        unsigned int VAO;
+        unsigned int VBO;
+        unsigned int EBO;
 
         Shader *shader;
 
     public:
         Object();
         ~Object();
+        void init();
     };
 
 }
