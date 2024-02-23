@@ -147,7 +147,7 @@ void Renderer::render()
     while (!glfwWindowShouldClose(window))
     {
         this->processInput(window);
-        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+        glClearColor(0.99f, 0.99f, 0.99f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* replace with : object->render(); */
@@ -165,6 +165,23 @@ void Renderer::render()
 
         unsigned int transformLoc = glGetUniformLocation(triangleShader->getID(), "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+        triangleShader->use();
+        int modelLoc = glGetUniformLocation(triangleShader->getID(), "model");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        int viewLoc = glGetUniformLocation(triangleShader->getID(), "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        int projectionLoc = glGetUniformLocation(triangleShader->getID(), "projection");
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         /* Bind Textures and VAO */
         glActiveTexture(GL_TEXTURE0);
