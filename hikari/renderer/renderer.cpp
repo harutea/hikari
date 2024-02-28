@@ -7,6 +7,32 @@
 using namespace hikari;
 using namespace std;
 
+void Renderer::framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
+void Renderer::processInput(GLFWwindow *window)
+{
+
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    float cameraSpeed = 2.0f * this->deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
+void Renderer::mouse_callback(GLFWwindow *window, double xpos, double ypos){
+
+};
+
 Renderer::Renderer()
 {
 }
@@ -23,7 +49,7 @@ void Renderer::setup()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    window = glfwCreateWindow(800, 600, "hikari", NULL, NULL);
+    window = glfwCreateWindow(800, 600, "hikari by harutea(Kihun Jang)", NULL, NULL);
     if (window == NULL)
     {
         std::cout << " Failed to create GLFW window" << std::endl;
@@ -38,6 +64,7 @@ void Renderer::setup()
         return;
     };
     // glfwSwapInterval(1);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -61,11 +88,18 @@ void Renderer::setup()
 
 void Renderer::render()
 {
+    deltaTime = 0.0f;
+    float lastTime = 0.0f;
+
     while (!glfwWindowShouldClose(window))
     {
         this->processInput(window);
         glClearColor(0.99f, 0.99f, 0.99f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        float currentTime = glfwGetTime();
+        deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
 
         cameraDirection = glm::normalize(cameraPos - cameraTarget);
         cameraRight = glm::normalize(glm::cross(up, cameraDirection));
@@ -93,31 +127,6 @@ void Renderer::clear()
     }
 
     glfwTerminate();
-}
-
-void Renderer::processInput(GLFWwindow *window)
-{
-
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-
-    const float cameraSpeed = 0.05f;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    {
-        cameraPos += cameraSpeed * cameraFront;
-        cout << "debug w" << endl;
-    }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-}
-
-void Renderer::framebuffer_size_callback(GLFWwindow *window, int width, int height)
-{
-    glViewport(0, 0, width, height);
 }
 
 void Renderer::registerObject(Object *object)
