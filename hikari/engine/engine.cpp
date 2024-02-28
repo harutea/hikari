@@ -23,7 +23,7 @@ void Engine::run()
     this->renderer->clear();
 }
 
-void Engine::putObject(Object *object)
+void Engine::registerObject(Object *object)
 {
-    this->renderer->putObject(object);
+    this->renderer->registerObject(object);
 }

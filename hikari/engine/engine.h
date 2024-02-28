@@ -17,7 +17,7 @@ namespace hikari
         ~Engine();
         void init();
         void run();
-        void putObject(Object *object);
+        void registerObject(Object *object);
     };
 
 }

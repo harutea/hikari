@@ -1,4 +1,4 @@
-#include "cube.h"
+#include "grass.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -12,18 +12,18 @@
 using namespace hikari;
 using namespace std;
 
-Cube::Cube()
+Grass::Grass()
 {
 }
 
-Cube::~Cube()
+Grass::~Grass()
 {
 }
 
-void Cube::setup()
+void Grass::setup()
 {
-    cout << "setup cube" << endl;
-    this->shader = new Shader("../shaders/cube.vert", "../shaders/cube.frag");
+    cout << "setup grass" << endl;
+    this->shader = new Shader("../shaders/triangle.vert", "../shaders/triangle.frag");
 
     /* Texture */
     float texCoords[] = {
@@ -161,7 +161,7 @@ void Cube::setup()
     glBindVertexArray(0);
 }
 
-void Cube::render()
+void Grass::render()
 {
     // cout << "render cube" << endl;
 
@@ -169,10 +169,12 @@ void Cube::render()
     shader->use();
 
     glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection;
 
     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
     int modelLoc = glGetUniformLocation(shader->getID(), "model");
@@ -194,14 +196,14 @@ void Cube::render()
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-void Cube::clear()
+void Grass::clear()
 {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     // glDeleteBuffers(1, &EBO);
 }
 
-void Cube::updateView(glm::mat4 _view)
+void Grass::updateView(glm::mat4 _view)
 {
     this->view = _view;
 }

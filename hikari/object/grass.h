@@ -1,15 +1,17 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef GRASS_H
+#define GRASS_H
 
 #include <hikari/vector/vector.h>
 #include <hikari/renderer/shader.h>
+#include "object.h"
+#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace hikari
 {
-    class Object
+    class Grass : public Object
     {
     private:
         unsigned int VAO;
@@ -19,20 +21,20 @@ namespace hikari
         unsigned int texture1;
         glm::mat4 view;
 
+        Shader *shader;
+
         Vector3 position;
         Vector3 velocity;
         Vector3 force;
         double mass;
 
-        Shader *shader;
-
     public:
-        Object();
-        ~Object();
-        virtual void setup() = 0;
-        virtual void render() = 0;
-        virtual void clear() = 0;
-        virtual void updateView(glm::mat4 _view) = 0;
+        Grass();
+        ~Grass();
+        void setup();
+        void render();
+        void clear();
+        void updateView(glm::mat4 _view);
     };
 
 }

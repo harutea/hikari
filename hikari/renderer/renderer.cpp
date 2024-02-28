@@ -17,7 +17,7 @@ Renderer::~Renderer()
 
 void Renderer::setup()
 {
-    /* Setup window */
+    /* Setup Window */
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -41,7 +41,16 @@ void Renderer::setup()
 
     glEnable(GL_DEPTH_TEST);
 
-    // Setup all objects in Object Pool
+    // Setup Camera
+    cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    cameraDirection = glm::normalize(cameraPos - cameraTarget);
+    up = glm::vec3(0.0f, 1.0f, 0.0f);
+    cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    cameraUp = glm::cross(cameraDirection, cameraRight);
+
+    /* Setup all objects in Object Pool */
     for (auto itr = objectPool.begin(); itr != objectPool.end(); itr++)
     {
         (*itr)->setup();
@@ -58,9 +67,16 @@ void Renderer::render()
         glClearColor(0.99f, 0.99f, 0.99f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Render all objects in Object Pool
+        cameraDirection = glm::normalize(cameraPos - cameraTarget);
+        cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+        cameraUp = glm::cross(cameraDirection, cameraRight);
+
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+        /* Render all objects in Object Pool */
         for (auto itr = objectPool.begin(); itr != objectPool.end(); itr++)
         {
+            (*itr)->updateView(view);
             (*itr)->render();
         }
 
@@ -71,17 +87,32 @@ void Renderer::render()
 
 void Renderer::clear()
 {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    for (auto itr = objectPool.begin(); itr != objectPool.end(); itr++)
+    {
+        (*itr)->clear();
+    }
 
     glfwTerminate();
 }
 
 void Renderer::processInput(GLFWwindow *window)
 {
+
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    const float cameraSpeed = 0.05f;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        cameraPos += cameraSpeed * cameraFront;
+        cout << "debug w" << endl;
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 void Renderer::framebuffer_size_callback(GLFWwindow *window, int width, int height)
@@ -89,7 +120,7 @@ void Renderer::framebuffer_size_callback(GLFWwindow *window, int width, int heig
     glViewport(0, 0, width, height);
 }
 
-void Renderer::putObject(Object *object)
+void Renderer::registerObject(Object *object)
 {
     objectPool.push_back(object);
 }
