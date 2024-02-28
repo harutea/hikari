@@ -24,8 +24,8 @@ namespace hikari
     public:
         Object();
         ~Object();
-        void init();
-        void render();
+        virtual void setup();
+        virtual void render();
     };
 
 }

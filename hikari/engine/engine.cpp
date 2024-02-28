@@ -22,3 +22,8 @@ void Engine::run()
     this->renderer->render();
     this->renderer->clear();
 }
+
+void Engine::putObject(Object *object)
+{
+    this->renderer->putObject(object);
+}

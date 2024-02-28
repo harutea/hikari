@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include <hikari/renderer/renderer.h>
+#include <hikari/object/object.h>
 
 namespace hikari
 {
@@ -16,6 +17,7 @@ namespace hikari
         ~Engine();
         void init();
         void run();
+        void putObject(Object *object);
     };
 
 }

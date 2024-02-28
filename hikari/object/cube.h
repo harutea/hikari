@@ -3,6 +3,7 @@
 
 #include <hikari/vector/vector.h>
 #include <hikari/renderer/shader.h>
+#include "object.h"
 #include <vector>
 
 namespace hikari
@@ -28,7 +29,7 @@ namespace hikari
     public:
         Cube();
         ~Cube();
-        void init();
+        void setup();
         void render();
     };
 

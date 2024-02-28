@@ -10,7 +10,7 @@ Object::~Object()
 {
 }
 
-void Object::init()
+void Object::setup()
 {
 }
 

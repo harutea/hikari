@@ -4,6 +4,8 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include "shader.h"
+#include <hikari/object/object.h>
+#include <vector>
 
 namespace hikari
 {
@@ -21,6 +23,8 @@ namespace hikari
         char *vertexShaderSource;
         char *fragmentShaderSource;
 
+        std::vector<Object *> objectPool;
+
     public:
         Renderer();
         ~Renderer();
@@ -28,6 +32,7 @@ namespace hikari
         void setup();
         void render();
         void clear();
+        void putObject(Object *object);
     };
 
 }
