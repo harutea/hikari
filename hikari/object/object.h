@@ -11,6 +11,14 @@ namespace hikari
 {
     class Object
     {
+    public:
+        Object();
+        ~Object();
+        virtual void setup() = 0;
+        virtual void render() = 0;
+        virtual void clear() = 0;
+        virtual void updateView(glm::mat4 _view) = 0;
+
     private:
         unsigned int VAO;
         unsigned int VBO;
@@ -25,14 +33,6 @@ namespace hikari
         double mass;
 
         Shader *shader;
-
-    public:
-        Object();
-        ~Object();
-        virtual void setup() = 0;
-        virtual void render() = 0;
-        virtual void clear() = 0;
-        virtual void updateView(glm::mat4 _view) = 0;
     };
 
 }

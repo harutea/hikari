@@ -13,6 +13,15 @@ namespace hikari
 {
     class Cube : public Object
     {
+
+    public:
+        Cube();
+        ~Cube();
+        void setup();
+        void render();
+        void clear();
+        void updateView(glm::mat4 _view);
+
     private:
         unsigned int VAO;
         unsigned int VBO;
@@ -27,14 +36,6 @@ namespace hikari
         Vector3 velocity;
         Vector3 force;
         double mass;
-
-    public:
-        Cube();
-        ~Cube();
-        void setup();
-        void render();
-        void clear();
-        void updateView(glm::mat4 _view);
     };
 
 }

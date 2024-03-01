@@ -7,9 +7,6 @@ namespace hikari
 {
     class Shader
     {
-    private:
-        unsigned int ID;
-
     public:
         Shader(const char *vertexShaderPath, const char *fragmentShaderPath);
         ~Shader();
@@ -18,6 +15,9 @@ namespace hikari
         void setInt(const std::string &name, int value) const;
         void setFloat(const std::string &name, float value) const;
         unsigned int getID() const;
+
+    private:
+        unsigned int ID;
     };
 }
 

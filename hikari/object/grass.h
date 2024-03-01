@@ -13,6 +13,15 @@ namespace hikari
 {
     class Grass : public Object
     {
+
+    public:
+        Grass();
+        ~Grass();
+        void setup();
+        void render();
+        void clear();
+        void updateView(glm::mat4 _view);
+
     private:
         unsigned int VAO;
         unsigned int VBO;
@@ -27,14 +36,6 @@ namespace hikari
         Vector3 velocity;
         Vector3 force;
         double mass;
-
-    public:
-        Grass();
-        ~Grass();
-        void setup();
-        void render();
-        void clear();
-        void updateView(glm::mat4 _view);
     };
 
 }

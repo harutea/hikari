@@ -14,6 +14,14 @@ namespace hikari
 {
     class Renderer
     {
+    public:
+        Renderer();
+        ~Renderer();
+        void setup();
+        void render();
+        void clear();
+        void registerObject(Object *object);
+
     private:
         GLFWwindow *window;
 
@@ -25,21 +33,20 @@ namespace hikari
         glm::vec3 cameraFront;
         glm::vec3 cameraUp;
         glm::mat4 view;
+        float yaw = -90.0f;
+        float pitch = 0.0f;
+        float lastX = 400, lastY = 300;
+        bool firstMouse;
+
         float deltaTime;
 
         std::vector<Object *> objectPool;
 
         static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-        void processInput(GLFWwindow *window);
-        void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+        static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+        void mouse_event(double xpos, double ypos);
 
-    public:
-        Renderer();
-        ~Renderer();
-        void setup();
-        void render();
-        void clear();
-        void registerObject(Object *object);
+        void processInput(GLFWwindow *window);
     };
 
 }
