@@ -104,6 +104,7 @@ void Renderer::render()
         {
             (*itr)->updateView(view);             // Update view transform matrix of objects
             (*itr)->updateProjection(projection); // Update projection transform matrix of objects
+            (*itr)->updateCameraPos(cameraPos);
             (*itr)->render();
         }
 

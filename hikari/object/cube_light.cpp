@@ -12,12 +12,18 @@
 using namespace hikari;
 using namespace std;
 
-CubeLight::CubeLight() : initX(0.0f), initY(0.0f), initZ(0.0f)
+CubeLight::CubeLight()
 {
+    initX = 0.0f;
+    initY = 0.0f;
+    initZ = 0.0f;
 }
 
-CubeLight::CubeLight(float _initX, float _initY, float _initZ) : initX(_initX), initY(_initY), initZ(_initZ)
+CubeLight::CubeLight(float _initX, float _initY, float _initZ)
 {
+    initX = _initX;
+    initY = _initY;
+    initZ = _initZ;
 }
 
 CubeLight::~CubeLight()
@@ -165,6 +171,8 @@ void CubeLight::render()
     model = glm::scale(model, glm::vec3(0.2f));
     model = glm::translate(model, glm::vec3(initX, initY, initZ));
 
+    model = glm::translate(model, glm::vec3(initX, initY, initZ));
+
     int modelLoc = glGetUniformLocation(shader->getID(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     int viewLoc = glGetUniformLocation(shader->getID(), "view");
@@ -196,4 +204,9 @@ void CubeLight::updateView(glm::mat4 _view)
 void CubeLight::updateProjection(glm::mat4 _projection)
 {
     this->projection = _projection;
+}
+
+void CubeLight::updateCameraPos(glm::vec3 _cameraPos)
+{
+    this->cameraPos = _cameraPos;
 }

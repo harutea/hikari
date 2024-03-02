@@ -19,8 +19,9 @@ namespace hikari
         virtual void clear() = 0;
         virtual void updateView(glm::mat4 _view) = 0;
         virtual void updateProjection(glm::mat4 _projection) = 0;
+        virtual void updateCameraPos(glm::vec3 _cameraPos) = 0;
 
-    private:
+    protected:
         unsigned int VAO;
         unsigned int VBO;
         unsigned int EBO;
@@ -28,12 +29,13 @@ namespace hikari
         unsigned int texture1;
         glm::mat4 view;
         glm::mat4 projection;
+        glm::vec3 cameraPos;
 
+        float initX, initY, initZ;
         Vector3 position;
         Vector3 velocity;
         Vector3 force;
         double mass;
-
         Shader *shader;
     };
 

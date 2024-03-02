@@ -13,8 +13,11 @@ Grass::Grass()
 {
 }
 
-Grass::Grass(float _initX, float _initY, float _initZ) : initX(_initX), initY(_initY), initZ(_initZ)
+Grass::Grass(float _initX, float _initY, float _initZ)
 {
+    initX = _initX;
+    initY = _initY;
+    initZ = _initZ;
 }
 
 Grass::~Grass()
@@ -177,4 +180,9 @@ void Grass::updateView(glm::mat4 _view)
 void Grass::updateProjection(glm::mat4 _projection)
 {
     this->projection = _projection;
+}
+
+void Grass::updateCameraPos(glm::vec3 _cameraPos)
+{
+    this->cameraPos = _cameraPos;
 }

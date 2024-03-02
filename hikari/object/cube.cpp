@@ -12,12 +12,18 @@
 using namespace hikari;
 using namespace std;
 
-Cube::Cube() : initX(0.0f), initY(0.0f), initZ(0.0f)
+Cube::Cube()
 {
+    initX = 0.0f;
+    initY = 0.0f;
+    initZ = 0.0f;
 }
 
-Cube::Cube(float _initX, float _initY, float _initZ) : initX(_initX), initY(_initY), initZ(_initZ)
+Cube::Cube(float _initX, float _initY, float _initZ)
 {
+    initX = _initX;
+    initY = _initY;
+    initZ = _initZ;
 }
 
 Cube::~Cube()
@@ -67,12 +73,10 @@ void Cube::setup()
 
     stbi_image_free(texData1);
 
-    glm::vec3 lightPos(1.1f, 3.0f, 2.0f);
     shader->use();
 
     /* Set Uniforms */
     shader->setInt("texture0", 0);
-    shader->setVec3("lightPos", lightPos);
     shader->setVec3("objectColor", glm::vec3(0.0f, 0.5f, 0.7f));
     shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -148,12 +152,19 @@ void Cube::render()
 
     glm::mat4 model = glm::mat4(1.0f);
 
-    // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+    // model = glm::scale(model, glm::vec3(10.0f, 0.5f, 0.5f));
     model = glm::translate(model, glm::vec3(initX, initY, initZ));
+
+    glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
+
+    glm::vec3 lightPos(1.1f, 3.0f, 2.0f);
+    shader->setVec3("lightPos", lightPos);
+    shader->setVec3("viewPos", cameraPos);
 
     int modelLoc = glGetUniformLocation(shader->getID(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    int normalMatrixLoc = glGetUniformLocation(shader->getID(), "normalMatrix");
+    glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, glm::value_ptr(normalMatrix));
     int viewLoc = glGetUniformLocation(shader->getID(), "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     int projectionLoc = glGetUniformLocation(shader->getID(), "projection");
@@ -186,4 +197,9 @@ void Cube::updateView(glm::mat4 _view)
 void Cube::updateProjection(glm::mat4 _projection)
 {
     this->projection = _projection;
+}
+
+void Cube::updateCameraPos(glm::vec3 _cameraPos)
+{
+    this->cameraPos = _cameraPos;
 }

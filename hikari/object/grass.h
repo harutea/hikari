@@ -16,30 +16,14 @@ namespace hikari
 
     public:
         Grass();
-        Grass(float initX, float initY, float initZ);
+        Grass(float _initX, float _initY, float _initZ);
         ~Grass();
         void setup();
         void render();
         void clear();
         void updateView(glm::mat4 _view);
         void updateProjection(glm::mat4 _projection);
-
-    private:
-        unsigned int VAO;
-        unsigned int VBO;
-        unsigned int EBO;
-        unsigned int texture0;
-        unsigned int texture1;
-        glm::mat4 view;
-        glm::mat4 projection;
-
-        Shader *shader;
-
-        float initX, initY, initZ;
-        Vector3 position;
-        Vector3 velocity;
-        Vector3 force;
-        double mass;
+        void updateCameraPos(glm::vec3 _cameraPos);
     };
 
 }
