@@ -24,6 +24,7 @@ namespace hikari
 
     private:
         GLFWwindow *window;
+        const int WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 900;
 
         glm::vec3 cameraPos;
         glm::vec3 cameraTarget;
@@ -33,6 +34,7 @@ namespace hikari
         glm::vec3 cameraFront;
         glm::vec3 cameraUp;
         glm::mat4 view;
+        glm::mat4 projection;
         float yaw = -90.0f;
         float pitch = 0.0f;
         float lastX = 400, lastY = 300;
@@ -40,12 +42,21 @@ namespace hikari
 
         float deltaTime;
 
+        enum Color
+        {
+            COLOR_BLACK,
+            COLOR_WHITE
+        };
+
+        Color colorMode;
+
         std::vector<Object *> objectPool;
 
         static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
         static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
         void mouse_event(double xpos, double ypos);
-
+        static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+        void key_event(int key, int scancode, int action, int mods);
         void processInput(GLFWwindow *window);
     };
 

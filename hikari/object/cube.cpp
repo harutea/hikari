@@ -12,7 +12,11 @@
 using namespace hikari;
 using namespace std;
 
-Cube::Cube()
+Cube::Cube() : initX(0.0f), initY(0.0f), initZ(0.0f)
+{
+}
+
+Cube::Cube(float _initX, float _initY, float _initZ) : initX(_initX), initY(_initY), initZ(_initZ)
 {
 }
 
@@ -48,7 +52,8 @@ void Cube::setup()
 
     stbi_set_flip_vertically_on_load(true);
 
-    unsigned char *texData1 = stbi_load("../resources/wall.jpg", &width, &height, &nrChannels, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    unsigned char *texData1 = stbi_load("../resources/sky2.jpg", &width, &height, &nrChannels, 0);
 
     if (texData1)
     {
@@ -62,32 +67,32 @@ void Cube::setup()
 
     stbi_image_free(texData1);
 
-    glGenTextures(1, &texture1);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
+    // glGenTextures(1, &texture1);
+    // glActiveTexture(GL_TEXTURE1);
+    // glBindTexture(GL_TEXTURE_2D, texture1);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    unsigned char *texData2 = stbi_load("../resources/face.png", &width, &height, &nrChannels, 0);
+    // unsigned char *texData2 = stbi_load("../resources/face.png", &width, &height, &nrChannels, 0);
 
-    if (texData2)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData2);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        cout << "Error in texture loading.";
-    }
+    // if (texData2)
+    // {
+    //     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData2);
+    //     glGenerateMipmap(GL_TEXTURE_2D);
+    // }
+    // else
+    // {
+    //     cout << "Error in texture loading.";
+    // }
 
-    stbi_image_free(texData2);
+    // stbi_image_free(texData2);
 
     shader->use();
     shader->setInt("texture0", 0);
-    shader->setInt("texture1", 1);
+    // shader->setInt("texture1", 1);
 
     /* VAO, VBO */
 
@@ -169,11 +174,10 @@ void Cube::render()
     shader->use();
 
     glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 projection;
 
     // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    model = glm::translate(model, glm::vec3(initX, initY, initZ));
 
     int modelLoc = glGetUniformLocation(shader->getID(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -185,8 +189,8 @@ void Cube::render()
     /* Bind Textures and VAO */
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture0);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
+    // glActiveTexture(GL_TEXTURE1);
+    // glBindTexture(GL_TEXTURE_2D, texture1);
     glBindVertexArray(VAO);
 
     /* Draw */
@@ -204,4 +208,9 @@ void Cube::clear()
 void Cube::updateView(glm::mat4 _view)
 {
     this->view = _view;
+}
+
+void Cube::updateProjection(glm::mat4 _projection)
+{
+    this->projection = _projection;
 }

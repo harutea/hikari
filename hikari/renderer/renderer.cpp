@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cstring>
 #include <cmath>
+
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 using namespace hikari;
@@ -23,7 +25,7 @@ void Renderer::setup()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    window = glfwCreateWindow(800, 600, "hikari by harutea(Kihun Jang)", NULL, NULL);
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "hikari by harutea", NULL, NULL);
     if (window == NULL)
     {
         std::cout << " Failed to create GLFW window" << std::endl;
@@ -40,6 +42,8 @@ void Renderer::setup()
     // glfwSwapInterval(1);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEPTH_TEST);
+
+    colorMode = COLOR_BLACK;
 
     /* Setup Camera */
     cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -59,6 +63,7 @@ void Renderer::setup()
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, &Renderer::framebuffer_size_callback);
     glfwSetCursorPosCallback(window, &Renderer::mouse_callback);
+    glfwSetKeyCallback(window, &Renderer::key_callback);
 
     /* Setup all objects in Object Pool */
     for (auto itr = objectPool.begin(); itr != objectPool.end(); itr++)
@@ -75,23 +80,26 @@ void Renderer::render()
     while (!glfwWindowShouldClose(window))
     {
         this->processInput(window);
-        glClearColor(0.99f, 0.99f, 0.99f, 1.0f);
+        if (colorMode == COLOR_WHITE)
+            glClearColor(0.99f, 0.99f, 0.99f, 1.0f);
+        else
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         float currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        cameraDirection = glm::normalize(cameraPos - cameraTarget);
-        cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-        cameraUp = glm::cross(cameraDirection, cameraRight);
-
+        // propagate projection also to objects
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        projection = glm::perspective(glm::radians(45.0f), float(WINDOW_WIDTH) / float(WINDOW_HEIGHT), 0.1f, 100.0f);
 
         /* Render all objects in Object Pool */
         for (auto itr = objectPool.begin(); itr != objectPool.end(); itr++)
         {
-            (*itr)->updateView(view); // Update view transform matrix of objects
+            (*itr)->updateView(view);             // Update view transform matrix of objects
+            (*itr)->updateProjection(projection); // Update projection transform matrix of objects
             (*itr)->render();
         }
 
@@ -127,6 +135,9 @@ void Renderer::mouse_callback(GLFWwindow *window, double xpos, double ypos)
 
 void Renderer::mouse_event(double xpos, double ypos)
 {
+    if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
+        return;
+
     if (firstMouse)
     {
         lastX = xpos;
@@ -139,7 +150,7 @@ void Renderer::mouse_event(double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.1f;
+    float sensitivity = 0.05f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
@@ -158,13 +169,31 @@ void Renderer::mouse_event(double xpos, double ypos)
     cameraFront = glm::normalize(direction);
 };
 
+void Renderer::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+    static_cast<Renderer *>(glfwGetWindowUserPointer(window))->key_event(key, scancode, action, mods);
+}
+
+void Renderer::key_event(int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_C && action == GLFW_PRESS)
+    {
+        if (colorMode == COLOR_BLACK)
+            colorMode = COLOR_WHITE;
+        else
+            colorMode = COLOR_BLACK;
+    }
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    if (key == GLFW_KEY_M && action == GLFW_PRESS)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
 void Renderer::processInput(GLFWwindow *window)
 {
-
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
+        return;
 
     float cameraSpeed = 2.0f * this->deltaTime;
 

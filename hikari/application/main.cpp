@@ -3,20 +3,17 @@
 #include <hikari/object/cube.h>
 #include <hikari/object/grass.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 int main()
 {
     hikari::Engine engine;
 
-    hikari::Cube cube;
+    hikari::Cube cube(0.0f, 0.0f, 0.0f);
+    hikari::Cube cube2(1.0f, 0.0f, 1.0f);
     hikari::Grass grass;
 
     engine.registerObject(&cube);
+    engine.registerObject(&cube2);
     engine.registerObject(&grass);
-
-    // engine.init();
 
     engine.run();
 

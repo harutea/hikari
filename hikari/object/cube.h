@@ -16,11 +16,13 @@ namespace hikari
 
     public:
         Cube();
+        Cube(float initX, float initY, float initZ);
         ~Cube();
         void setup();
         void render();
         void clear();
         void updateView(glm::mat4 _view);
+        void updateProjection(glm::mat4 _projection);
 
     private:
         unsigned int VAO;
@@ -29,9 +31,11 @@ namespace hikari
         unsigned int texture0;
         unsigned int texture1;
         glm::mat4 view;
+        glm::mat4 projection;
 
         Shader *shader;
 
+        float initX, initY, initZ;
         Vector3 position;
         Vector3 velocity;
         Vector3 force;

@@ -18,6 +18,7 @@ namespace hikari
         virtual void render() = 0;
         virtual void clear() = 0;
         virtual void updateView(glm::mat4 _view) = 0;
+        virtual void updateProjection(glm::mat4 _projection) = 0;
 
     private:
         unsigned int VAO;
@@ -26,6 +27,7 @@ namespace hikari
         unsigned int texture0;
         unsigned int texture1;
         glm::mat4 view;
+        glm::mat4 projection;
 
         Vector3 position;
         Vector3 velocity;
