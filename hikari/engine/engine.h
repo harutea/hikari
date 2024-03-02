@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include <hikari/renderer/renderer.h>
+#include <hikari/object/object.h>
 
 namespace hikari
 {
@@ -14,9 +15,11 @@ namespace hikari
     public:
         Engine();
         ~Engine();
-        void runGame();
+        void init();
+        void run();
+        void registerObject(Object *object);
     };
 
 }
 
-#endif HANDLER_H
+#endif ENGINE_H

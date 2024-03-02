@@ -3,12 +3,13 @@ cmake_minimum_required(VERSION 3.14)
 project(hikari)
 
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/hikari/*.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
