@@ -13,6 +13,10 @@ Grass::Grass()
 {
 }
 
+Grass::Grass(float _initX, float _initY, float _initZ) : initX(_initX), initY(_initY), initZ(_initZ)
+{
+}
+
 Grass::~Grass()
 {
 }
@@ -134,7 +138,7 @@ void Grass::render()
     // glm::mat4 view = glm::mat4(1.0f);
 
     model = glm::scale(model, glm::vec3(0.3f, 0.5f, 0.3f));
-    model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+    model = glm::translate(model, glm::vec3(initX, initY, initZ));
     // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
     int modelLoc = glGetUniformLocation(shader->getID(), "model");

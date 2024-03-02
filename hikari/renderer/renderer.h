@@ -35,9 +35,10 @@ namespace hikari
         glm::vec3 cameraUp;
         glm::mat4 view;
         glm::mat4 projection;
-        float yaw = -90.0f;
-        float pitch = 0.0f;
-        float lastX = 400, lastY = 300;
+        float fov;
+        float yaw;
+        float pitch;
+        float lastX, lastY;
         bool firstMouse;
 
         float deltaTime;
@@ -57,6 +58,8 @@ namespace hikari
         void mouse_event(double xpos, double ypos);
         static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
         void key_event(int key, int scancode, int action, int mods);
+        static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+        void scroll_event(double xoffset, double yoffset);
         void processInput(GLFWwindow *window);
     };
 

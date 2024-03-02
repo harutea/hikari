@@ -1,5 +1,5 @@
-#ifndef GRASS_H
-#define GRASS_H
+#ifndef CUBE_LIGHT_H
+#define CUBE_LIGHT_H
 
 #include <hikari/vector/vector.h>
 #include <hikari/renderer/shader.h>
@@ -11,13 +11,13 @@
 
 namespace hikari
 {
-    class Grass : public Object
+    class CubeLight : public Object
     {
 
     public:
-        Grass();
-        Grass(float initX, float initY, float initZ);
-        ~Grass();
+        CubeLight();
+        CubeLight(float initX, float initY, float initZ);
+        ~CubeLight();
         void setup();
         void render();
         void clear();

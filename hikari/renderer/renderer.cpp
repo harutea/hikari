@@ -28,7 +28,7 @@ void Renderer::setup()
     window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "hikari by harutea", NULL, NULL);
     if (window == NULL)
     {
-        std::cout << " Failed to create GLFW window" << std::endl;
+        std::cout << "[Error] Failed to create GLFW window" << std::endl;
         glfwTerminate();
         // return -1;
     }
@@ -36,7 +36,7 @@ void Renderer::setup()
     glfwMakeContextCurrent(window);
     if (!gladLoadGL(glfwGetProcAddress))
     {
-        cout << "Error : Failed to initialize OpenGL context." << endl;
+        cout << "[Error] Failed to initialize OpenGL context." << endl;
         return;
     };
     // glfwSwapInterval(1);
@@ -55,8 +55,12 @@ void Renderer::setup()
     cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     cameraUp = glm::cross(cameraDirection, cameraRight);
 
+    fov = 45.0f;
+
     yaw = -90.0f;
     pitch = 0.0f;
+
+    lastX = 400, lastY = 300;
 
     /* Setup Callbacks */
     firstMouse = false;
@@ -64,6 +68,7 @@ void Renderer::setup()
     glfwSetFramebufferSizeCallback(window, &Renderer::framebuffer_size_callback);
     glfwSetCursorPosCallback(window, &Renderer::mouse_callback);
     glfwSetKeyCallback(window, &Renderer::key_callback);
+    glfwSetScrollCallback(window, &Renderer::scroll_callback);
 
     /* Setup all objects in Object Pool */
     for (auto itr = objectPool.begin(); itr != objectPool.end(); itr++)
@@ -91,9 +96,8 @@ void Renderer::render()
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        // propagate projection also to objects
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        projection = glm::perspective(glm::radians(45.0f), float(WINDOW_WIDTH) / float(WINDOW_HEIGHT), 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(fov), float(WINDOW_WIDTH) / float(WINDOW_HEIGHT), 0.1f, 100.0f);
 
         /* Render all objects in Object Pool */
         for (auto itr = objectPool.begin(); itr != objectPool.end(); itr++)
@@ -186,8 +190,22 @@ void Renderer::key_event(int key, int scancode, int action, int mods)
 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    if (key == GLFW_KEY_M && action == GLFW_PRESS)
+    if (key == GLFW_KEY_F && action == GLFW_PRESS)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void Renderer::scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    static_cast<Renderer *>(glfwGetWindowUserPointer(window))->scroll_event(xoffset, yoffset);
+}
+
+void Renderer::scroll_event(double xoffset, double yoffset)
+{
+    fov -= (float)yoffset;
+    if (fov < 1.0f)
+        fov = 1.0f;
+    if (fov > 45.0f)
+        fov = 45.0f;
 }
 
 void Renderer::processInput(GLFWwindow *window)

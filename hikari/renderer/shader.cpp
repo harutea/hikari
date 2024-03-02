@@ -4,6 +4,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace hikari;
 using namespace std;
@@ -33,7 +36,7 @@ Shader::Shader(const char *vertexShaderPath, const char *fragmentShaderPath)
     }
     catch (ifstream::failure e)
     {
-        cout << "Error in Shader : File is not succesfully read." << endl;
+        cout << "[Error] : File is not succesfully read." << endl;
     }
     const char *vertShaderRaw = vertexShaderSource.c_str();
     const char *fragShaderRaw = fragmentShaderSource.c_str();
@@ -50,7 +53,7 @@ Shader::Shader(const char *vertexShaderPath, const char *fragmentShaderPath)
     if (!success)
     {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        cout << "Error in Shader : Vertex Shader Compilation Failed\n"
+        cout << "[Error] : Vertex Shader Compilation Failed\n"
              << infoLog << endl;
     }
 
@@ -61,7 +64,7 @@ Shader::Shader(const char *vertexShaderPath, const char *fragmentShaderPath)
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        cout << "Error in Shader : Fragment Shader Compilation Failed\n"
+        cout << "[Error] : Fragment Shader Compilation Failed\n"
              << infoLog << endl;
     }
 
@@ -74,7 +77,7 @@ Shader::Shader(const char *vertexShaderPath, const char *fragmentShaderPath)
     if (!success)
     {
         glGetProgramInfoLog(this->ID, 512, NULL, infoLog);
-        cout << "Error in Shader : Program Link Failed\n"
+        cout << "[Error] : Shader Program Link Failed\n"
              << infoLog << endl;
     }
 
@@ -105,6 +108,12 @@ void Shader::setInt(const std::string &name, int value) const
 void Shader::setFloat(const std::string &name, float value) const
 {
     glUniform1f(glGetUniformLocation(this->ID, name.c_str()), value);
+}
+
+void Shader::setVec3(const std::string &name, const glm::vec3 &value) const
+{
+    cout << value[1];
+    glUniform3fv(glGetUniformLocation(this->ID, name.c_str()), 1, &value[0]);
 }
 
 unsigned int Shader::getID() const
