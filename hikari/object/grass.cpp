@@ -27,7 +27,7 @@ Grass::~Grass()
 void Grass::setup()
 {
     cout << "setup grass" << endl;
-    this->shader = new Shader("../shaders/grass.vert", "../shaders/grass.frag");
+    this->shader = new Shader("./shaders/grass.vert", "./shaders/grass.frag");
 
     /* VAO, VBO */
 

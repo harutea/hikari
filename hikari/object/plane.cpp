@@ -1,4 +1,4 @@
-#include "cube.h"
+#include "plane.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -12,27 +12,27 @@
 using namespace hikari;
 using namespace std;
 
-Cube::Cube()
+Plane::Plane()
 {
     initX = 0.0f;
     initY = 0.0f;
     initZ = 0.0f;
 }
 
-Cube::Cube(float _initX, float _initY, float _initZ)
+Plane::Plane(float _initX, float _initY, float _initZ)
 {
     initX = _initX;
     initY = _initY;
     initZ = _initZ;
 }
 
-Cube::~Cube()
+Plane::~Plane()
 {
 }
 
-void Cube::setup()
+void Plane::setup()
 {
-    cout << "setup cube" << endl;
+    cout << "setup Plane" << endl;
     this->shader = new Shader("./shaders/lighting.vert", "./shaders/lighting.frag");
 
     /* Texture */
@@ -146,9 +146,9 @@ void Cube::setup()
     glBindVertexArray(0);
 }
 
-void Cube::render()
+void Plane::render()
 {
-    // cout << "render cube" << endl;
+    // cout << "render Plane" << endl;
 
     /* Transform */
     shader->use();
@@ -189,24 +189,24 @@ void Cube::render()
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-void Cube::clear()
+void Plane::clear()
 {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     // glDeleteBuffers(1, &EBO);
 }
 
-void Cube::updateView(glm::mat4 _view)
+void Plane::updateView(glm::mat4 _view)
 {
     this->view = _view;
 }
 
-void Cube::updateProjection(glm::mat4 _projection)
+void Plane::updateProjection(glm::mat4 _projection)
 {
     this->projection = _projection;
 }
 
-void Cube::updateCameraPos(glm::vec3 _cameraPos)
+void Plane::updateCameraPos(glm::vec3 _cameraPos)
 {
     this->cameraPos = _cameraPos;
 }

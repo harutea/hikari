@@ -30,3 +30,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 # glm
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
+
+# copy auxiliary files
+file(COPY "hikari/shaders/" DESTINATION "shaders/")
+file(COPY "hikari/resources/" DESTINATION "resources/")

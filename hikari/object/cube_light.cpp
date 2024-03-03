@@ -33,7 +33,7 @@ CubeLight::~CubeLight()
 void CubeLight::setup()
 {
     cout << "setup CubeLight" << endl;
-    this->shader = new Shader("../shaders/light_source.vert", "../shaders/light_source.frag");
+    this->shader = new Shader("./shaders/light_source.vert", "./shaders/light_source.frag");
 
     /* Texture */
     float texCoords[] = {
