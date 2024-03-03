@@ -17,13 +17,15 @@ Plane::Plane()
     initX = 0.0f;
     initY = 0.0f;
     initZ = 0.0f;
+    planeSize = 32;
 }
 
-Plane::Plane(float _initX, float _initY, float _initZ)
+Plane::Plane(float _initX, float _initY, float _initZ, int _planeSize)
 {
     initX = _initX;
     initY = _initY;
     initZ = _initZ;
+    planeSize = _planeSize;
 }
 
 Plane::~Plane()
@@ -33,114 +35,70 @@ Plane::~Plane()
 void Plane::setup()
 {
     cout << "setup Plane" << endl;
-    this->shader = new Shader("./shaders/lighting.vert", "./shaders/lighting.frag");
-
-    /* Texture */
-    float texCoords[] = {
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.5f,
-        1.0f,
-    };
-
-    glGenTextures(1, &texture0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture0);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nrChannels;
-
-    stbi_set_flip_vertically_on_load(true);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    unsigned char *texData1 = stbi_load("./resources/sky2.jpg", &width, &height, &nrChannels, 0);
-
-    if (texData1)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData1);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        cout << "Error in texture loading.";
-    }
-
-    stbi_image_free(texData1);
+    this->shader = new Shader("./shaders/plane.vert", "./shaders/plane.frag");
 
     shader->use();
 
     /* Set Uniforms */
     shader->setInt("texture0", 0);
-    shader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-    shader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    shader->setVec3("material.ambient", 0.1f, 0.6f, 0.3f);
+    shader->setVec3("material.diffuse", 0.1f, 0.6f, 0.3f);
     shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
     shader->setFloat("material.shininess", 32.0f);
 
-    /* VAO, VBO */
-    float vertices[] = {
-        // position, normal
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+    /* Calculate Vertex Positions */
+    float *vertices = new float[3 * planeSize * planeSize];
 
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+    for (int i = 0; i < planeSize; i++)
+    {
+        for (int j = 0; j < planeSize; j++)
+        {
+            float &vertX = vertices[i * 3 * planeSize + j * 3];
+            float &vertY = vertices[i * 3 * planeSize + j * 3 + 1];
+            float &vertZ = vertices[i * 3 * planeSize + j * 3 + 2];
+            vertX = i - planeSize / 2;
+            vertY = 0;
+            vertZ = j - planeSize / 2;
+        }
+    }
 
-        -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+    /* Calculate Indices */
 
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+    unsigned int *indices = new unsigned int[(planeSize - 1) * (planeSize - 1) * 2 * 3];
+    int current = 0;
+    for (int i = 0; i < planeSize - 1; i++)
+    {
+        for (int j = 0; j < planeSize - 1; j++)
+        {
+            indices[current++] = i * planeSize + j;
+            indices[current++] = i * planeSize + j + planeSize;
+            indices[current++] = i * planeSize + j + planeSize + 1;
 
-        -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+            indices[current++] = i * planeSize + j;
+            indices[current++] = i * planeSize + j + planeSize + 1;
+            indices[current++] = i * planeSize + j + 1;
+        }
+    }
 
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f};
-
+    /* VAO, VBO, EBO */
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * planeSize * planeSize, vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * (planeSize - 1) * (planeSize - 1) * 2 * 3, indices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
     // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -148,6 +106,7 @@ void Plane::setup()
 
 void Plane::render()
 {
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // cout << "render Plane" << endl;
 
     /* Transform */
@@ -177,16 +136,10 @@ void Plane::render()
     int projectionLoc = glGetUniformLocation(shader->getID(), "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    /* Bind Textures and VAO */
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture0);
-    // glActiveTexture(GL_TEXTURE1);
-    // glBindTexture(GL_TEXTURE_2D, texture1);
-    glBindVertexArray(VAO);
-
     /* Draw */
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, (planeSize - 1) * (planeSize - 1) * 2 * 3, GL_UNSIGNED_INT, 0);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Plane::clear()

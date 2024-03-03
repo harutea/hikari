@@ -16,7 +16,7 @@ namespace hikari
 
     public:
         Plane();
-        Plane(float initX, float initY, float initZ);
+        Plane(float initX, float initY, float initZ, int planeSize);
         ~Plane();
         void setup();
         void render();
@@ -24,6 +24,9 @@ namespace hikari
         void updateView(glm::mat4 _view);
         void updateProjection(glm::mat4 _projection);
         void updateCameraPos(glm::vec3 _cameraPos);
+
+    private:
+        int planeSize;
     };
 
 }

@@ -3,6 +3,7 @@
 #include <hikari/object/cube.h>
 #include <hikari/object/cube_light.h>
 #include <hikari/object/grass.h>
+#include <hikari/object/plane.h>
 
 int main()
 {
@@ -13,10 +14,13 @@ int main()
     hikari::Cube cube2(1.0f, 0.0f, 1.0f);
     hikari::Grass grass(5.0f, 0.0f, 0.0f);
 
+    hikari::Plane plane(0.0f, -3.0f, 0.0f, 64);
+
     engine.registerObject(&light);
     engine.registerObject(&cube);
     engine.registerObject(&cube2);
     engine.registerObject(&grass);
+    engine.registerObject(&plane);
 
     engine.run();
 
