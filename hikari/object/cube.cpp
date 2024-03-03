@@ -33,7 +33,7 @@ Cube::~Cube()
 void Cube::setup()
 {
     cout << "setup cube" << endl;
-    this->shader = new Shader("../shaders/cube.vert", "../shaders/cube.frag");
+    this->shader = new Shader("../shaders/lighting.vert", "../shaders/lighting.frag");
 
     /* Texture */
     float texCoords[] = {
@@ -77,11 +77,14 @@ void Cube::setup()
 
     /* Set Uniforms */
     shader->setInt("texture0", 0);
-    shader->setVec3("objectColor", glm::vec3(0.0f, 0.5f, 0.7f));
-    shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    shader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    shader->setFloat("material.shininess", 32.0f);
 
     /* VAO, VBO */
     float vertices[] = {
+        // position, normal
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
         0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
         0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
@@ -158,8 +161,12 @@ void Cube::render()
     glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
 
     glm::vec3 lightPos(1.1f, 3.0f, 2.0f);
+    glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+    glm::vec3 objectColor(0.1f, 1.0f, 0.3f);
     shader->setVec3("lightPos", lightPos);
     shader->setVec3("viewPos", cameraPos);
+    shader->setVec3("lightColor", lightColor);
+    shader->setVec3("objectColor", objectColor);
 
     int modelLoc = glGetUniformLocation(shader->getID(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
