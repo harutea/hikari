@@ -1,4 +1,4 @@
-#include "plane.h"
+#include "ocean.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -12,30 +12,30 @@
 using namespace hikari;
 using namespace std;
 
-Plane::Plane()
+Ocean::Ocean()
 {
     initX = 0.0f;
     initY = 0.0f;
     initZ = 0.0f;
-    planeSize = 32;
+    OceanSize = 32;
 }
 
-Plane::Plane(float _initX, float _initY, float _initZ, int _planeSize)
+Ocean::Ocean(float _initX, float _initY, float _initZ, int _OceanSize)
 {
     initX = _initX;
     initY = _initY;
     initZ = _initZ;
-    planeSize = _planeSize;
+    OceanSize = _OceanSize;
 }
 
-Plane::~Plane()
+Ocean::~Ocean()
 {
 }
 
-void Plane::setup()
+void Ocean::setup()
 {
-    cout << "setup Plane" << endl;
-    this->shader = new Shader("./shaders/plane.vert", "./shaders/plane.frag");
+    cout << "setup Ocean" << endl;
+    this->shader = new Shader("./shaders/Ocean.vert", "./shaders/Ocean.frag");
 
     shader->use();
 
@@ -47,36 +47,36 @@ void Plane::setup()
     shader->setFloat("material.shininess", 32.0f);
 
     /* Calculate Vertex Positions */
-    float *vertices = new float[3 * planeSize * planeSize];
+    float *vertices = new float[3 * OceanSize * OceanSize];
 
-    for (int i = 0; i < planeSize; i++)
+    for (int i = 0; i < OceanSize; i++)
     {
-        for (int j = 0; j < planeSize; j++)
+        for (int j = 0; j < OceanSize; j++)
         {
-            float &vertX = vertices[i * 3 * planeSize + j * 3];
-            float &vertY = vertices[i * 3 * planeSize + j * 3 + 1];
-            float &vertZ = vertices[i * 3 * planeSize + j * 3 + 2];
-            vertX = i - planeSize / 2;
+            float &vertX = vertices[i * 3 * OceanSize + j * 3];
+            float &vertY = vertices[i * 3 * OceanSize + j * 3 + 1];
+            float &vertZ = vertices[i * 3 * OceanSize + j * 3 + 2];
+            vertX = i - OceanSize / 2;
             vertY = 0;
-            vertZ = j - planeSize / 2;
+            vertZ = j - OceanSize / 2;
         }
     }
 
     /* Calculate Indices */
 
-    unsigned int *indices = new unsigned int[(planeSize - 1) * (planeSize - 1) * 2 * 3];
+    unsigned int *indices = new unsigned int[(OceanSize - 1) * (OceanSize - 1) * 2 * 3];
     int current = 0;
-    for (int i = 0; i < planeSize - 1; i++)
+    for (int i = 0; i < OceanSize - 1; i++)
     {
-        for (int j = 0; j < planeSize - 1; j++)
+        for (int j = 0; j < OceanSize - 1; j++)
         {
-            indices[current++] = i * planeSize + j;
-            indices[current++] = i * planeSize + j + planeSize;
-            indices[current++] = i * planeSize + j + planeSize + 1;
+            indices[current++] = i * OceanSize + j;
+            indices[current++] = i * OceanSize + j + OceanSize;
+            indices[current++] = i * OceanSize + j + OceanSize + 1;
 
-            indices[current++] = i * planeSize + j;
-            indices[current++] = i * planeSize + j + planeSize + 1;
-            indices[current++] = i * planeSize + j + 1;
+            indices[current++] = i * OceanSize + j;
+            indices[current++] = i * OceanSize + j + OceanSize + 1;
+            indices[current++] = i * OceanSize + j + 1;
         }
     }
 
@@ -88,10 +88,10 @@ void Plane::setup()
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * planeSize * planeSize, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * OceanSize * OceanSize, vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * (planeSize - 1) * (planeSize - 1) * 2 * 3, indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * (OceanSize - 1) * (OceanSize - 1) * 2 * 3, indices, GL_STATIC_DRAW);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
@@ -104,17 +104,17 @@ void Plane::setup()
     glBindVertexArray(0);
 }
 
-void Plane::render()
+void Ocean::render()
 {
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    // cout << "render Plane" << endl;
+    // cout << "render Ocean" << endl;
 
     /* Transform */
     shader->use();
 
     glm::mat4 model = glm::mat4(1.0f);
 
-    // model = glm::scale(model, glm::vec3(10.0f, 0.5f, 0.5f));
+    model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
     model = glm::translate(model, glm::vec3(initX, initY, initZ));
 
     glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
@@ -139,28 +139,28 @@ void Plane::render()
 
     /* Draw */
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, (planeSize - 1) * (planeSize - 1) * 2 * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, (OceanSize - 1) * (OceanSize - 1) * 2 * 3, GL_UNSIGNED_INT, 0);
     // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void Plane::clear()
+void Ocean::clear()
 {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     // glDeleteBuffers(1, &EBO);
 }
 
-void Plane::updateView(glm::mat4 _view)
+void Ocean::updateView(glm::mat4 _view)
 {
     this->view = _view;
 }
 
-void Plane::updateProjection(glm::mat4 _projection)
+void Ocean::updateProjection(glm::mat4 _projection)
 {
     this->projection = _projection;
 }
 
-void Plane::updateCameraPos(glm::vec3 _cameraPos)
+void Ocean::updateCameraPos(glm::vec3 _cameraPos)
 {
     this->cameraPos = _cameraPos;
 }
