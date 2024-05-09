@@ -1,7 +1,7 @@
 # hikari
 3D Graphics Engine using OpenGL
 
-## Clone
+## Clone with submodules
 ```bash
 git clone --recursive https://github.com/harutea/hikari.git
 ```
