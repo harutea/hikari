@@ -1,1 +1,4 @@
 build/
+.vscode/
+hikari/resources/*.png
+hikari/resources/*.jpg
