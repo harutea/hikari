@@ -28,8 +28,8 @@ Cube::~Cube() {}
 
 void Cube::setup() {
   cout << "setup cube" << endl;
-  this->shader =
-      new Shader("./shaders/lighting.vert", "./shaders/lighting.frag");
+  this->shader = new Shader("./shaders/phong_lighting.vert",
+                            "./shaders/phong_lighting.frag");
 
   /* Texture */
   float texCoords[] = {
@@ -59,7 +59,7 @@ void Cube::setup() {
                  GL_UNSIGNED_BYTE, texData1);
     glGenerateMipmap(GL_TEXTURE_2D);
   } else {
-    cout << "Error in texture loading.";
+    cout << "Error in texture loading." << endl;
   }
 
   stbi_image_free(texData1);

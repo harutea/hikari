@@ -1,4 +1,4 @@
-#include "cube_light.h"
+#include "volumetric_light.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -12,22 +12,22 @@
 using namespace hikari;
 using namespace std;
 
-CubeLight::CubeLight() {
+VolumetricLight::VolumetricLight() {
   initX = 0.0f;
   initY = 0.0f;
   initZ = 0.0f;
 }
 
-CubeLight::CubeLight(float _initX, float _initY, float _initZ) {
+VolumetricLight::VolumetricLight(float _initX, float _initY, float _initZ) {
   initX = _initX;
   initY = _initY;
   initZ = _initZ;
 }
 
-CubeLight::~CubeLight() {}
+VolumetricLight::~VolumetricLight() {}
 
-void CubeLight::setup() {
-  cout << "setup CubeLight" << endl;
+void VolumetricLight::setup() {
+  cout << "setup VolumetricLight" << endl;
   this->shader =
       new Shader("./shaders/light_source.vert", "./shaders/light_source.frag");
 
@@ -59,7 +59,7 @@ void CubeLight::setup() {
                  GL_UNSIGNED_BYTE, texData1);
     glGenerateMipmap(GL_TEXTURE_2D);
   } else {
-    cout << "Error in texture loading." << endl;
+    cout << "Error in texture loading.";
   }
 
   stbi_image_free(texData1);
@@ -137,7 +137,7 @@ void CubeLight::setup() {
   glBindVertexArray(0);
 }
 
-void CubeLight::render() {
+void VolumetricLight::render() {
   /* Transform */
   shader->use();
 
@@ -164,18 +164,18 @@ void CubeLight::render() {
   glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-void CubeLight::clear() {
+void VolumetricLight::clear() {
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
   // glDeleteBuffers(1, &EBO);
 }
 
-void CubeLight::updateView(glm::mat4 _view) { this->view = _view; }
+void VolumetricLight::updateView(glm::mat4 _view) { this->view = _view; }
 
-void CubeLight::updateProjection(glm::mat4 _projection) {
+void VolumetricLight::updateProjection(glm::mat4 _projection) {
   this->projection = _projection;
 }
 
-void CubeLight::updateCameraPosition(glm::vec3 _cameraPosition) {
+void VolumetricLight::updateCameraPosition(glm::vec3 _cameraPosition) {
   this->cameraPosition = _cameraPosition;
 }

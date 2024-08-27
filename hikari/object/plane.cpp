@@ -30,14 +30,15 @@ Plane::~Plane() {}
 
 void Plane::setup() {
   cout << "setup Plane" << endl;
-  this->shader = new Shader("./shaders/plane.vert", "./shaders/plane.frag");
+  this->shader = new Shader("./shaders/phong_lighting.vert",
+                            "./shaders/phong_lighting.frag");
 
   shader->use();
 
   /* Set Uniforms */
   shader->setInt("texture0", 0);
   shader->setVec3("material.ambient", 0.1f, 0.6f, 0.3f);
-  shader->setVec3("material.diffuse", 0.1f, 0.6f, 0.3f);
+  shader->setVec3("material.diffuse", 0.8f, 0.7f, 0.7f);
   shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
   shader->setFloat("material.shininess", 32.0f);
 

@@ -115,7 +115,7 @@ void Ocean::render() {
 
   glm::vec3 lightPos(1.1f, 3.0f, 2.0f);
   glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-  glm::vec3 objectColor(0.1f, 1.0f, 0.3f);
+  glm::vec3 objectColor(1.0f, 0.9f, 0.9f);
   shader->setVec3("lightPos", lightPos);
   shader->setVec3("viewPos", cameraPosition);
   shader->setVec3("lightColor", lightColor);

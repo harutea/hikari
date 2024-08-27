@@ -2,16 +2,16 @@ cmake_minimum_required(VERSION 3.14)
 
 project(hikari)
 
-file(GLOB_RECURSE SRC_FILES
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/hikari/*.cpp
 )
 
-file(GLOB_RECURSE SHADER_FILES 
+file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
      ${CMAKE_SOURCE_DIR}/hikari/*.vert
      ${CMAKE_SOURCE_DIR}/hikari/*.frag
 )
 
-file(GLOB_RECURSE RESOURCE_FILES
+file(GLOB_RECURSE RESOURCE_FILES CONFIGURE_DEPENDS
      ${CMAKE_SOURCE_DIR}/hikari/*.png
      ${CMAKE_SOURCE_DIR}/hikari/*.jpg
 )
